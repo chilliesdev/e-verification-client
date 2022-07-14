@@ -1,0 +1,92 @@
+{
+  "level": [
+    {
+      "name": "100 Level",
+      "value": "100 Level"
+    },
+    {
+      "name": "200 Level",
+      "value": "200 Level"
+    },
+    {
+      "name": "300 Level",
+      "value": "300 Level"
+    },
+    {
+      "name": "400 Level",
+      "value": "400 Level"
+    },
+    {
+      "name": "500 Level",
+      "value": "500 Level"
+    }
+  ],
+  "faculty": [
+    {
+      "name": "Faculty-1",
+      "value": "Faculty-1",
+      "department": [
+        {
+          "name": "Department-1",
+          "value": "Department-1"
+        },
+        {
+          "name": "Department-2",
+          "value": "Department-2"
+        }
+      ]
+    },
+    {
+      "name": "Faculty-2",
+      "value": "Faculty-2",
+      "department": [
+        {
+          "name": "Department-3",
+          "value": "Department-3"
+        },
+        {
+          "name": "Department-4",
+          "value": "Department-4"
+        }
+      ]
+    }
+  ],
+  "educationLevel": [
+    {
+      "name": "level-1",
+      "value": "level-1"
+    },
+    {
+      "name": "level-2",
+      "value": "level-2"
+    }
+  ],
+  "position": [
+    {
+      "name": "position-1",
+      "value": "position-1"
+    },
+    {
+      "name": "position-2",
+      "value": "position-2"
+    }
+  ],
+  "department": [
+    {
+      "name": "Department-1",
+      "value": "Department-1"
+    },
+    {
+      "name": "Department-2",
+      "value": "Department-2"
+    },
+    {
+      "name": "Department-3",
+      "value": "Department-3"
+    },
+    {
+      "name": "Department-4",
+      "value": "Department-4"
+    }
+  ]
+}
