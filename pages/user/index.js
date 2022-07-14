@@ -49,7 +49,7 @@ export default function User() {
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
+  }, [accessToken, users]);
 
   return (
     <>

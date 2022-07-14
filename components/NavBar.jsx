@@ -10,7 +10,7 @@ export default function NavBar() {
 
   useEffect(() => {
     setAccessToken(newAccessToken);
-  }, []);
+  }, [newAccessToken]);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-800 absolute w-screen">

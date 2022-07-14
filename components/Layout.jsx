@@ -15,7 +15,7 @@ export default function Layouts({ children }) {
       dispatch(removeAccessToken());
       router.push("/");
     }
-  }, []);
+  }, [accessToken, dispatch, router]);
 
   return (
     <>

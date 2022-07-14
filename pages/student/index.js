@@ -47,7 +47,7 @@ export default function Student() {
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
+  }, [accessToken, students]);
 
   return (
     <>

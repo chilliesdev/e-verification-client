@@ -10,7 +10,7 @@ import AppLogo from "../components/AppLogo";
 import Spinner from "../components/Spinner";
 import ErrorToast from "../components/ErrorToast";
 
-export default function login() {
+export default function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
 

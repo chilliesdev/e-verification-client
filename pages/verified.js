@@ -1,6 +1,6 @@
 import AppLogo from "../components/AppLogo";
 
-function verified({ data }) {
+function Verified({ data }) {
   return (
     <div className="w-screen h-screen flex items-center flex-col pt-20 text-lg uppercase">
       <AppLogo />
@@ -53,4 +53,4 @@ export async function getServerSideProps(context) {
   return { props: { data } };
 }
 
-export default verified;
+export default Verified;
