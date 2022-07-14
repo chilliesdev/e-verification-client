@@ -8,9 +8,31 @@ import { useSelector } from "react-redux";
 export default function Student() {
   const accessToken = useSelector((state) => state.auth.accessToken);
 
-  const [students, setStudents] = useState([]);
+  const data = {
+    secondaryLink: {
+      name: "Edit",
+      url: "/student/edit",
+    },
+    head: [
+      "Name",
+      "Matric Number",
+      "Date Of Birth",
+      "Level",
+      "Faculty",
+      "Department",
+    ],
+    selectedColumns: [
+      "name",
+      "matricNumber",
+      "dataOfBirth",
+      "level",
+      "faculty",
+      "department",
+    ],
+    body: [],
+  };
 
-  // const data =
+  const [students, setStudents] = useState(data);
 
   useEffect(() => {
     axios
@@ -19,7 +41,9 @@ export default function Student() {
           Authorization: `Bearer ${accessToken}`,
         },
       })
-      .then((res) => setStudents(res.data))
+      .then((res) => {
+        setStudents({ ...students, body: res.data });
+      })
       .catch((err) => {
         console.log(err.message);
       });
@@ -36,36 +60,11 @@ export default function Student() {
           Add Student
         </StyledLink>
       </div>
-      <Table data={data} />;
+      <Table data={students} />;
     </>
   );
 }
 
 Student.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
-};
-
-const data = {
-  secondaryLink: {
-    name: "Edit",
-    url: "/student/edit",
-  },
-  head: ["Product name", "Color", "Category", "Price"],
-  selectedColumns: ["title", "color", "type", "price"],
-  body: [
-    {
-      id: 1,
-      title: 'Apple MacBook Pro 17"',
-      color: "Sliver",
-      type: "Accessories",
-      price: "$2999",
-    },
-    {
-      id: 2,
-      title: 'Apple MacBook Pro 17"',
-      color: "Sliver",
-      type: "Accessories",
-      price: "$2999",
-    },
-  ],
 };

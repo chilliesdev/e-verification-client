@@ -1,11 +1,22 @@
+import axios from "axios";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import ErrorToast from "../../components/ErrorToast";
 import Input from "../../components/Input";
 import Layout from "../../components/Layout";
 import Select from "../../components/Select";
+import Spinner from "../../components/Spinner";
 import DATA from "../../data.json";
 
-function Add({ data }) {
+export default function Add({ data }) {
+  const router = useRouter();
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const [loading, setLoading] = useState(false);
+  const [displayError, setDisplayError] = useState(false);
+  const [message, setMessage] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -17,7 +28,6 @@ function Add({ data }) {
   watch("faculty");
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(value, name, type);
       if (name === "faculty") {
         setDepartment(
           DATA.faculty.filter((data) => data.value === value.faculty)
@@ -27,7 +37,37 @@ function Add({ data }) {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const onSubmit = (data) => console.log(data);
+  function handleErrors(error) {
+    const errArr = error.response.data;
+
+    if (error.response.status == 409) return errArr.message;
+
+    let errMsg = [];
+    for (let err of errArr) {
+      errMsg.push(`${err.msg} ${err.param}`);
+    }
+
+    return errMsg.join("<br/>");
+  }
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/student`, data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      setLoading(false);
+      router.push("/student");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setDisplayError(true);
+      setMessage(handleErrors(err));
+    }
+  };
 
   return (
     <>
@@ -80,11 +120,17 @@ function Add({ data }) {
           selectvalue={department.length > 0 ? department[0].department : []}
           required
         />
+        {displayError && (
+          <ErrorToast dismiss={() => setDisplayError(false)}>
+            {message}
+          </ErrorToast>
+        )}
         <button
+          disabled={loading}
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
-          Add
+          {loading ? <Spinner /> : `Add`}
         </button>
       </form>
     </>
@@ -94,14 +140,3 @@ function Add({ data }) {
 Add.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
-
-// export async function getServerSideProps({ params }) {
-//   // Fetch data from external API
-//   const res = await fetch(`https://.../posts/${params.id}`);
-//   const data = await res.json();
-
-//   // Pass data to the page via props
-//   return { props: { data } };
-// }
-
-export default Edit;

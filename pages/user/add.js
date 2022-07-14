@@ -1,19 +1,59 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import Input from "../../components/Input";
 import Layout from "../../components/Layout";
 import Select from "../../components/Select";
 import DATA from "../../data.json";
+import Spinner from "../../components/Spinner";
+import ErrorToast from "../../components/ErrorToast";
 
-function Add({ data }) {
+function Add() {
+  const router = useRouter();
+  const accessToken = useSelector((state) => state.auth.accessToken);
+  const [loading, setLoading] = useState(false);
+  const [displayError, setDisplayError] = useState(false);
+  const [message, setMessage] = useState("");
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  function handleErrors(error) {
+    const errArr = error.response.data;
+
+    if (error.response.status == 409) return errArr.message;
+
+    let errMsg = [];
+    for (let err of errArr) {
+      errMsg.push(`${err.msg} ${err.param}`);
+    }
+
+    return errMsg.join("<br/>");
+  }
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/user`, data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      setLoading(false);
+      router.push("/user");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setDisplayError(true);
+      setMessage(handleErrors(err));
+    }
+  };
 
   return (
     <>
@@ -53,9 +93,9 @@ function Add({ data }) {
           required
         />
         <Select
-          {...register("postion")}
-          label="postion"
-          id="postion"
+          {...register("position")}
+          label="Position"
+          id="position"
           selectvalue={DATA.position}
           required
         />
@@ -66,11 +106,33 @@ function Add({ data }) {
           selectvalue={DATA.department}
           required
         />
+        <Input
+          {...register("staffNo")}
+          label="Staff Number"
+          id="staffNo"
+          type="text"
+          placeholder=""
+          required
+        />
+        <Input
+          {...register("password")}
+          label="Password"
+          id="password"
+          type="password"
+          placeholder=""
+          required
+        />
+        {displayError && (
+          <ErrorToast dismiss={() => setDisplayError(false)}>
+            {message}
+          </ErrorToast>
+        )}
         <button
+          disabled={loading}
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
-          Add
+          {loading ? <Spinner /> : `Add`}
         </button>
       </form>
     </>
