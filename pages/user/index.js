@@ -44,7 +44,6 @@ export default function User() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setUsers({ ...users, body: res.data });
       })
       .catch((err) => {
